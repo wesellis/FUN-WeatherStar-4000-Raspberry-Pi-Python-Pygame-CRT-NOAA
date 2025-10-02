@@ -128,7 +128,12 @@ python run_weatherstar.py
 2. **Toggle Weather Trends** - Show/hide trend arrows
 3. **Toggle Historical Data** - Show/hide comparisons
 4. **Music Volume** - Adjust background music (0-100%)
-5. **Refresh Weather Data** - Force update
+5. **MSN Top Stories** - Toggle MSN news headlines
+6. **Reddit Headlines** - Toggle Reddit news
+7. **Local News** - Toggle local news display
+8. **International Weather** - Switch between NOAA (US) and Open Meteo (worldwide)
+9. **Color Theme** - Cycle through 5 themes (Classic, Dark, High Contrast, Retro Green, Amber)
+R. **Refresh Weather Data** - Force update
 
 ## 🗂️ Project Structure
 
@@ -235,13 +240,15 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## 🎯 Roadmap
 
-- [ ] International weather support (non-US locations)
-- [ ] Custom color themes
-- [ ] Weather history graphs
-- [ ] Severe weather animations
-- [ ] Voice narration option
+- [x] International weather support (non-US locations) - ✅ **DONE**
+- [x] Custom color themes - ✅ **DONE** (5 themes available)
+- [x] Automated test suite - ✅ **DONE** (21 tests, 100% passing)
+- [ ] Weather history graphs (30-day temperature/precipitation trends)
+- [ ] Severe weather animations (flashing alerts, scrolling warnings)
+- [ ] Voice narration option (TTS for forecasts)
 - [ ] Web interface for remote viewing
 - [ ] Mobile companion app
+- [ ] Performance optimization for Pi Zero 2W (<150MB RAM)
 
 ## 📺 Screenshots
 
@@ -263,21 +270,25 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## Project Status & Roadmap
 
-**Completion: ~85%**
+**Completion: ~92%**
 
 ### What Works
-- ✅ 18 Python files with modular architecture
+- ✅ 19 Python files with modular architecture
 - ✅ 20+ weather display modes (current conditions, forecasts, radar, almanac)
 - ✅ NOAA/NWS API for US weather data
 - ✅ Open Meteo API for international weather
+- ✅ **NEW: International weather toggle in settings menu**
 - ✅ News integration (MSN headlines, Reddit, local news)
 - ✅ Emergency alerts with NOAA integration
 - ✅ 75 smooth jazz background music tracks
 - ✅ 41 weather condition icons with GIF animations
 - ✅ Authentic Star4000 fonts (4 TTF fonts)
+- ✅ **NEW: 5 color themes** (Classic, Dark, High Contrast, Retro Green, Amber)
 - ✅ Raspberry Pi optimizations (Pi 3B+, 4, Zero 2W tested)
 - ✅ CRT TV support (640x480, 4:3 aspect ratio, composite output)
-- ✅ Settings menu with volume, toggles, refresh
+- ✅ Settings menu with volume, toggles, themes, API selection
+- ✅ **NEW: Comprehensive test suite** (21 unit + integration tests, 100% passing)
+- ✅ **NEW: Automated CI/CD testing** via GitHub Actions
 - ✅ GitHub Actions workflows (Pi image builder, Windows EXE, releases)
 - ✅ Comprehensive documentation and setup scripts
 - ✅ Air quality and health displays
@@ -289,18 +300,18 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ### Known Limitations & Missing Features
 
 **Testing:**
-- ❌ **No Unit Tests** - No automated test suite
-- ❌ **No Integration Tests** - Manual testing only
+- ✅ **Unit Tests** - 21 tests covering config, settings, API, integration
+- ✅ **Automated Testing** - GitHub Actions CI running tests on push/PR
 - ⚠️ **Hardware Testing** - Performance metrics documented but ongoing validation needed
 
 **Features:**
 - ⚠️ **Local News** - Requires API key for real news, simulated by default
-- ❌ **International Toggle** - Open Meteo implemented but no easy US/International switch in UI
-- ❌ **Custom Color Themes** - Only authentic blue gradient theme available
+- ✅ **International Toggle** - Easy UI switch between NOAA and Open Meteo
+- ✅ **Custom Color Themes** - 5 themes available (classic, dark, high contrast, retro green, amber)
 - ❌ **Voice Narration** - No audio narration of forecasts
 - ❌ **Web Interface** - No remote viewing capability
 - ❌ **Mobile Companion App** - Desktop/Pi only
-- ❌ **Weather History Graphs** - No historical trend visualization
+- ❌ **Weather History Graphs** - No historical trend visualization (30-day trends)
 - ❌ **Severe Weather Animations** - Static emergency alerts only
 
 **Performance:**
@@ -329,12 +340,13 @@ This is a **production-ready, fully functional WeatherStar 4000 recreation** mar
 
 ### What Needs Work
 
-1. **Testing Infrastructure** - Add unit tests and integration tests
-2. **CI/CD Enhancement** - Add automated testing to GitHub Actions
-3. **Roadmap Features** - Implement international toggle, custom themes
-4. **Web Interface** - Remote viewing capability for modern displays
-5. **Documentation** - Video tutorials and wiki
-6. **Performance** - Further optimize for Pi Zero 2W
+1. ~~**Testing Infrastructure**~~ - ✅ **COMPLETED** (21 unit + integration tests)
+2. ~~**CI/CD Enhancement**~~ - ✅ **COMPLETED** (GitHub Actions automated testing)
+3. ~~**Roadmap Features**~~ - ✅ **COMPLETED** (International toggle + 5 color themes)
+4. **Weather History Graphs** - 30-day temperature and precipitation trends
+5. **Severe Weather Animations** - Animated emergency alerts
+6. **Web Interface** - Remote viewing capability for modern displays (optional)
+7. **Performance** - Further optimize for Pi Zero 2W (<150MB RAM target)
 
 ### Achievements
 

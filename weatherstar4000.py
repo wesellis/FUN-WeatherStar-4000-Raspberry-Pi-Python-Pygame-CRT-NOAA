@@ -28,6 +28,7 @@ from weatherstar_modules.animated_icons import AnimatedIconManager
 from weatherstar_modules.displays import WeatherStarDisplays
 from weatherstar_modules.news_displays import WeatherStarNewsDisplays
 from weatherstar_modules.data_fetchers import WeatherStarDataFetchers
+from weatherstar_modules.themes import get_theme, list_themes, CLASSIC_THEME
 
 # Initialize logging
 logger = init_logger()
@@ -382,8 +383,13 @@ class WeatherStar4000Complete:
             'show_trends': True,
             'show_historical': True,
             'show_msn': True,  # Auto-enabled by default
-            'show_reddit': True  # Auto-enabled by default
+            'show_reddit': True,  # Auto-enabled by default
+            'use_international': False,  # Use Open Meteo API for international weather
+            'theme': 'classic'  # Color theme
         }
+
+        # Load current theme
+        self.current_theme = get_theme(self.settings['theme'])
 
         # Weather trends storage for arrow indicators
         self.weather_trends = {
@@ -1004,7 +1010,8 @@ class WeatherStar4000Complete:
                 'show_historical': True,
                 'show_msn': False,
                 'show_reddit': False,
-            'show_local_news': True
+                'show_local_news': True,
+                'use_international': False
             }
 
         # Create smaller, compact menu
@@ -1048,6 +1055,12 @@ class WeatherStar4000Complete:
             ("Audio Settings", "category", None),
             ("[4] Music Volume", "volume", self.settings.get('music_volume', 0.3)),
             ("---", None, None),  # Separator
+            ("Weather Source", "category", None),
+            ("[8] International Weather", "use_international", self.settings.get('use_international', False)),
+            ("---", None, None),  # Separator
+            ("Appearance", "category", None),
+            ("[9] Color Theme", "theme", self.settings.get('theme', 'classic')),
+            ("---", None, None),  # Separator
             ("News & Information", "category", None),
             ("[5] MSN Top Stories", "show_msn", self.settings.get('show_msn', False)),
             ("[6] Reddit Headlines", "show_reddit", self.settings.get('show_reddit', False)),
@@ -1075,7 +1088,7 @@ class WeatherStar4000Complete:
                 # Regular menu item with checkbox style
                 item_x = 20
                 # Draw checkbox for toggleable items
-                if setting in ["show_marine", "show_trends", "show_historical", "show_msn", "show_reddit", "show_local_news"]:
+                if setting in ["show_marine", "show_trends", "show_historical", "show_msn", "show_reddit", "show_local_news", "use_international"]:
                     # Draw checkbox
                     checkbox = pygame.Rect(item_x, y_pos, 11, 11)
                     pygame.draw.rect(menu_surface, WIN95_LIGHT, checkbox)
@@ -1094,6 +1107,9 @@ class WeatherStar4000Complete:
                 if setting == "volume":
                     vol_pct = int(value * 100)
                     text = f"{text}: {vol_pct}%"
+                elif setting == "theme":
+                    theme_name = get_theme(value).name
+                    text = f"{text}: {theme_name}"
 
                 item_text = item_font.render(text, True, WIN95_BLACK)
                 menu_surface.blit(item_text, (item_x, y_pos))
@@ -1158,6 +1174,25 @@ class WeatherStar4000Complete:
                         self.settings['show_local_news'] = not self.settings.get('show_local_news', True)
                         self.update_display_list()
                         logger.main_logger.info(f"Local news: {self.settings['show_local_news']}")
+                        self.show_context_menu()  # Redraw menu
+                        return
+                    elif event.key == pygame.K_8:
+                        # Toggle International Weather (Open Meteo API)
+                        self.settings['use_international'] = not self.settings.get('use_international', False)
+                        self.get_weather_data()  # Refresh with new API
+                        api_name = "Open Meteo (International)" if self.settings['use_international'] else "NOAA (US Only)"
+                        logger.main_logger.info(f"Weather API: {api_name}")
+                        self.show_context_menu()  # Redraw menu
+                        return
+                    elif event.key == pygame.K_9:
+                        # Cycle through color themes
+                        themes = list_themes()
+                        current_theme = self.settings.get('theme', 'classic')
+                        current_index = themes.index(current_theme) if current_theme in themes else 0
+                        next_index = (current_index + 1) % len(themes)
+                        self.settings['theme'] = themes[next_index]
+                        self.current_theme = get_theme(themes[next_index])
+                        logger.main_logger.info(f"Color theme: {self.current_theme.name}")
                         self.show_context_menu()  # Redraw menu
                         return
                     elif event.key == pygame.K_r:
