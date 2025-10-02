@@ -40,6 +40,11 @@ The WeatherStar 4000 was the iconic weather information system used by The Weath
 - **Weather Almanac** - Records, sunrise/sunset, precipitation totals
 - **Local Radar** - Animated radar imagery
 - **Hazards & Warnings** - Active weather alerts
+- **30-Day Temperature History** - Historical temperature trends
+- **30-Day Precipitation History** - Rainfall accumulation tracking
+- **UV Index Forecast** - 7-day UV protection guidance
+- **Recent Earthquakes** - USGS seismic activity (magnitude 3.0+)
+- **Stock Market** - Live DOW, S&P 500, NASDAQ indices
 
 ### 🆕 Enhanced Features (New in v1.0!)
 - **Air Quality & Health** - Real-time AQI, pollen counts, health recommendations
@@ -175,6 +180,10 @@ Comprehensive logging is saved to the `logs/` directory:
 ## 🌐 Data Sources
 
 - **Weather Data**: [NOAA/NWS API](https://api.weather.gov) (US only)
+- **International Weather**: [Open-Meteo API](https://open-meteo.com) (worldwide)
+- **UV Index & History**: [Open-Meteo API](https://open-meteo.com)
+- **Earthquakes**: [USGS Earthquake API](https://earthquake.usgs.gov)
+- **Stock Market**: [Alpha Vantage API](https://www.alphavantage.co)
 - **Radar Images**: [Iowa State Mesonet](https://mesonet.agron.iastate.edu)
 - **Location Detection**: [ipapi.co](https://ipapi.co)
 
@@ -263,11 +272,16 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ### What Works
 - ✅ 24 Python files with modular architecture
-- ✅ 22+ weather display modes (current conditions, forecasts, radar, almanac, **history graphs**)
+- ✅ 26+ weather display modes (current conditions, forecasts, radar, almanac, **history, UV index, earthquakes, stocks**)
 - ✅ NOAA/NWS API for US weather data
-- ✅ Open Meteo API for international weather
+- ✅ Open Meteo API for international weather & UV index
+- ✅ USGS Earthquake API for seismic data
+- ✅ Alpha Vantage API for live stock market data
 - ✅ International weather toggle in settings menu
-- ✅ **30-day weather history graphs** (temperature & precipitation trends)
+- ✅ **30-day weather history** (temperature & precipitation trends)
+- ✅ **UV Index Forecast** (7-day protection guidance)
+- ✅ **Recent Earthquakes** (magnitude 3.0+ from USGS)
+- ✅ **Stock Market Indices** (live DOW, S&P 500, NASDAQ)
 - ✅ **Animated severe weather alerts** (flashing borders, scrolling warnings, pulsating effects)
 - ✅ **Performance optimizer** (frame skipping, caching, memory management for Pi)
 - ✅ **NEW: Voice narration** (professional weather announcer, OFF by default, audio ducking)
@@ -315,13 +329,14 @@ All core features are complete. The following are optional polish items:
 ### Current Status
 
 This is a **production-ready, fully functional WeatherStar 4000 recreation** marked as "READY FOR RELEASE v1.0" in project documentation. The project successfully recreates the authentic 1990s Weather Channel experience with:
-- Complete weather display system with 20+ modes
+- Complete weather display system with 26+ modes
+- Live data integration (weather, UV index, earthquakes, stock market)
 - Professional Raspberry Pi and CRT TV integration
 - Authentic assets (music, fonts, graphics)
 - Clean, modular codebase
 - Comprehensive documentation
 
-**Reality Check**: This is one of the most complete personal projects - it actually works as advertised. All core features implemented. Missing features are polish items specific to the CRT/Raspberry Pi experience, not core functionality.
+**Reality Check**: This is one of the most complete personal projects - it actually works as advertised. All core features implemented plus extended data displays for modern information needs.
 
 ### Performance Metrics
 
