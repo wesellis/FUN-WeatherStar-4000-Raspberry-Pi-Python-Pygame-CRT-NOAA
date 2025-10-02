@@ -58,4 +58,7 @@ class DisplayMode(Enum):
     LOCAL_NEWS = "local-news"
     TEMPERATURE_HISTORY = "temperature-history"  # 30-day temperature history
     PRECIPITATION_HISTORY = "precipitation-history"  # 30-day precipitation history
+    UV_INDEX = "uv-index"  # UV Index forecast
+    EARTHQUAKES = "earthquakes"  # Recent earthquakes (USGS)
+    STOCK_MARKET = "stock-market"  # Stock market indices
     SEVERE_WEATHER_ALERT = "severe-weather-alert"  # Animated weather alerts

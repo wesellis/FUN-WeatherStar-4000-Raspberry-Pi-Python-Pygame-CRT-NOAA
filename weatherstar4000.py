@@ -88,6 +88,9 @@ class DisplayMode(Enum):
     LOCAL_NEWS = "local-news"
     TEMPERATURE_HISTORY = "temperature-history"
     PRECIPITATION_HISTORY = "precipitation-history"
+    UV_INDEX = "uv-index"
+    EARTHQUAKES = "earthquakes"
+    STOCK_MARKET = "stock-market"
     SEVERE_WEATHER_ALERT = "severe-weather-alert"
 
 # Colors from ws4kp SCSS
@@ -1009,18 +1012,18 @@ class WeatherStar4000Complete:
         if has_noaa and 'noaa' in self.logos:
             self.screen.blit(self.logos['noaa'], (356, 39))
 
-        # Time at exact position: left: 415px, right-aligned within 170px width
+        # Time at exact position: right-aligned, moved up 10px and right 5px
         time_str = datetime.now().strftime("%I:%M %p").lstrip('0')
         time_text = self.font_small.render(time_str, True, COLORS['white'])
-        # Right-align within the box from 415 to 585 (415 + 170)
-        time_rect = time_text.get_rect(right=585, y=44)
+        # Right-align at 590 (was 585+5), y=34 (was 44-10)
+        time_rect = time_text.get_rect(right=590, y=34)
         self.screen.blit(time_text, time_rect)
 
         # Date below the time (authentic WeatherStar 4000 style)
         date_str = datetime.now().strftime("%a %b %d").upper()  # "WED OCT 02"
         date_text = self.font_small.render(date_str, True, COLORS['white'])
-        # Right-align below the time
-        date_rect = date_text.get_rect(right=585, y=64)
+        # Right-align below the time at 590, y=54 (was 64-10)
+        date_rect = date_text.get_rect(right=590, y=54)
         self.screen.blit(date_text, date_rect)
 
     def show_context_menu(self):
@@ -1287,6 +1290,9 @@ class WeatherStar4000Complete:
             DisplayMode.ALMANAC,               # 7. Almanac
             DisplayMode.TEMPERATURE_HISTORY,   # 8. 30-Day Temperature History
             DisplayMode.PRECIPITATION_HISTORY, # 9. 30-Day Precipitation History
+            DisplayMode.UV_INDEX,              # 10. UV Index Forecast
+            DisplayMode.EARTHQUAKES,           # 11. Recent Earthquakes
+            DisplayMode.STOCK_MARKET,          # 12. Stock Market Indices
         ]
 
         # Add optional displays only if enabled (keep it simple by default)
@@ -1502,6 +1508,18 @@ class WeatherStar4000Complete:
                         # Draw 30-Day Precipitation History
                         if self.displays_module:
                             self.displays_module.draw_precipitation_history()
+                    elif current_mode == DisplayMode.UV_INDEX:
+                        # Draw UV Index Forecast
+                        if self.displays_module:
+                            self.displays_module.draw_uv_index()
+                    elif current_mode == DisplayMode.EARTHQUAKES:
+                        # Draw Recent Earthquakes
+                        if self.displays_module:
+                            self.displays_module.draw_recent_earthquakes()
+                    elif current_mode == DisplayMode.STOCK_MARKET:
+                        # Draw Stock Market Indices
+                        if self.displays_module:
+                            self.displays_module.draw_stock_market()
                     elif current_mode == DisplayMode.SEVERE_WEATHER_ALERT:
                         # NEW: Animated severe weather alert
                         self.draw_severe_weather_alert(dt / 1000.0)

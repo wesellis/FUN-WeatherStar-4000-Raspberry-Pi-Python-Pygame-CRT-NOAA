@@ -450,7 +450,14 @@ class WeatherStarDisplays:
         if location_str:
             location_text = self.ws.font_normal.render(location_str, True, COLORS['yellow'])
             self.ws.screen.blit(location_text, (right_col_x, y_pos))
-            y_pos += 34  # margin-bottom: 10px + line-height: 24px
+            y_pos += 30  # Spacing before date
+
+        # Date below location
+        from datetime import datetime
+        date_str = datetime.now().strftime("%a %b %d").upper()  # "WED OCT 02"
+        date_text = self.ws.font_small.render(date_str, True, COLORS['white'])
+        self.ws.screen.blit(date_text, (right_col_x, y_pos))
+        y_pos += 30  # Spacing before data rows
 
         # Data rows with labels and values
         row_data = []
@@ -641,6 +648,13 @@ class WeatherStarDisplays:
         """Draw Extended Forecast screen with proper ws4kp column layout"""
         self.draw_background('3')
         self.draw_header("Extended", "Forecast")
+
+        # Date at top center
+        from datetime import datetime
+        date_str = datetime.now().strftime("%A, %B %d, %Y")  # "Wednesday, October 02, 2025"
+        date_text = self.ws.font_small.render(date_str, True, COLORS['white'])
+        date_rect = date_text.get_rect(center=(320, 90))
+        self.ws.screen.blit(date_text, date_rect)
 
         forecast = self.ws.weather_data.get('forecast', {})
         periods = forecast.get('periods', [])
@@ -2150,6 +2164,213 @@ class WeatherStarDisplays:
                 history.last_scroll_time = time.time()
 
         self.logger.main_logger.debug("Drew Precipitation History display")
+
+    def draw_uv_index(self):
+        """Draw UV Index Forecast - 90s style scrolling text"""
+        self.ws.draw_background('5')  # Latest Observations background
+        self.ws.draw_header("UV Index", "Forecast")
+
+        # Fetch UV index data from Open Meteo
+        try:
+            import requests
+            url = "https://api.open-meteo.com/v1/forecast"
+            params = {
+                'latitude': self.ws.lat,
+                'longitude': self.ws.lon,
+                'daily': 'uv_index_max',
+                'forecast_days': 7,
+                'timezone': 'auto'
+            }
+            response = requests.get(url, params=params, timeout=10)
+
+            if response.status_code == 200:
+                data = response.json()
+                daily = data.get('daily', {})
+                dates = daily.get('time', [])
+                uv_values = daily.get('uv_index_max', [])
+
+                # Column headers
+                y_pos = 120
+                header_col1 = self.ws.font_normal.render("DATE", True, COLORS['yellow'])
+                header_col2 = self.ws.font_normal.render("UV INDEX", True, COLORS['yellow'])
+                header_col3 = self.ws.font_normal.render("PROTECTION", True, COLORS['yellow'])
+
+                self.ws.screen.blit(header_col1, (60, y_pos))
+                self.ws.screen.blit(header_col2, (280, y_pos))
+                self.ws.screen.blit(header_col3, (450, y_pos))
+
+                y_pos += 40
+
+                # Draw horizontal line under headers
+                pygame.draw.line(self.ws.screen, COLORS['yellow'], (50, y_pos - 5), (590, y_pos - 5), 1)
+
+                # Display 7 days of UV data
+                for i, (date_str, uv) in enumerate(zip(dates, uv_values)):
+                    if i >= 7:
+                        break
+
+                    try:
+                        # Format date
+                        date_obj = datetime.strptime(date_str, "%Y-%m-%d")
+                        date_display = date_obj.strftime("%a %m/%d")
+
+                        # UV Index level and protection
+                        if uv < 3:
+                            level = "Low"
+                        elif uv < 6:
+                            level = "Moderate"
+                        elif uv < 8:
+                            level = "High"
+                        elif uv < 11:
+                            level = "Very High"
+                        else:
+                            level = "Extreme"
+
+                        # Display row
+                        date_text = self.ws.font_normal.render(date_display, True, COLORS['white'])
+                        uv_text = self.ws.font_normal.render(f"{int(uv)}", True, COLORS['white'])
+                        level_text = self.ws.font_normal.render(level, True, COLORS['white'])
+
+                        self.ws.screen.blit(date_text, (60, y_pos))
+                        self.ws.screen.blit(uv_text, (300, y_pos))
+                        self.ws.screen.blit(level_text, (460, y_pos))
+
+                        y_pos += 30
+
+                    except Exception as e:
+                        self.logger.main_logger.error(f"Error formatting UV index row: {e}")
+                        continue
+
+        except Exception as e:
+            self.logger.main_logger.error(f"Error fetching UV index data: {e}")
+            # Show error message
+            error_text = self.ws.font_normal.render("UV Index data unavailable", True, COLORS['white'])
+            error_rect = error_text.get_rect(center=(320, 240))
+            self.ws.screen.blit(error_text, error_rect)
+
+        self.logger.main_logger.debug("Drew UV Index display")
+
+    def draw_recent_earthquakes(self):
+        """Draw Recent Earthquakes - USGS data, 90s style scrolling list"""
+        self.ws.draw_background('5')  # Latest Observations background
+        self.ws.draw_header("Recent", "Earthquakes")
+
+        # Fetch earthquake data from USGS (mag 3.0+, last 7 days)
+        try:
+            import requests
+            url = "https://earthquake.usgs.gov/fdsnws/event/1/query"
+            params = {
+                'format': 'geojson',
+                'minmagnitude': 3.0,
+                'orderby': 'time',
+                'limit': 10
+            }
+            response = requests.get(url, params=params, timeout=10)
+
+            if response.status_code == 200:
+                data = response.json()
+                earthquakes = data.get('features', [])
+
+                # Column headers
+                y_pos = 120
+                header_col1 = self.ws.font_normal.render("MAG", True, COLORS['yellow'])
+                header_col2 = self.ws.font_normal.render("LOCATION", True, COLORS['yellow'])
+                header_col3 = self.ws.font_normal.render("TIME", True, COLORS['yellow'])
+
+                self.ws.screen.blit(header_col1, (60, y_pos))
+                self.ws.screen.blit(header_col2, (160, y_pos))
+                self.ws.screen.blit(header_col3, (480, y_pos))
+
+                y_pos += 40
+
+                # Draw horizontal line under headers
+                pygame.draw.line(self.ws.screen, COLORS['yellow'], (50, y_pos - 5), (590, y_pos - 5), 1)
+
+                # Display earthquakes
+                for quake in earthquakes[:8]:  # Show up to 8
+                    try:
+                        props = quake.get('properties', {})
+                        mag = props.get('mag', 0)
+                        place = props.get('place', 'Unknown')[:25]  # Limit length
+                        time_ms = props.get('time', 0)
+
+                        # Format time
+                        from datetime import datetime
+                        quake_time = datetime.fromtimestamp(time_ms / 1000)
+                        time_display = quake_time.strftime("%m/%d %H:%M")
+
+                        # Display row
+                        mag_text = self.ws.font_normal.render(f"{mag:.1f}", True, COLORS['white'])
+                        place_text = self.ws.font_normal.render(place, True, COLORS['white'])
+                        time_text = self.ws.font_normal.render(time_display, True, COLORS['white'])
+
+                        self.ws.screen.blit(mag_text, (70, y_pos))
+                        self.ws.screen.blit(place_text, (160, y_pos))
+                        self.ws.screen.blit(time_text, (490, y_pos))
+
+                        y_pos += 28
+
+                    except Exception as e:
+                        self.logger.main_logger.error(f"Error formatting earthquake row: {e}")
+                        continue
+
+        except Exception as e:
+            self.logger.main_logger.error(f"Error fetching earthquake data: {e}")
+            # Show error message
+            error_text = self.ws.font_normal.render("Earthquake data unavailable", True, COLORS['white'])
+            error_rect = error_text.get_rect(center=(320, 240))
+            self.ws.screen.blit(error_text, error_rect)
+
+        self.logger.main_logger.debug("Drew Recent Earthquakes display")
+
+    def draw_stock_market(self):
+        """Draw Stock Market Indices - Simple ticker display"""
+        self.ws.draw_background('5')  # Latest Observations background
+        self.ws.draw_header("Stock Market", "Update")
+
+        # Note: This would require an API key for real data
+        # For now, show placeholder with instructions
+        y_pos = 150
+
+        title = self.ws.font_extended.render("MARKET INDICES", True, COLORS['yellow'])
+        title_rect = title.get_rect(center=(320, y_pos))
+        self.ws.screen.blit(title, title_rect)
+        y_pos += 50
+
+        # Placeholder indices
+        indices = [
+            ("DOW JONES", "44,910.65", "+125.50", "green"),
+            ("S&P 500", "6,012.28", "+22.18", "green"),
+            ("NASDAQ", "19,218.17", "+85.28", "green")
+        ]
+
+        for name, value, change, color in indices:
+            # Index name
+            name_text = self.ws.font_normal.render(name, True, COLORS['white'])
+            self.ws.screen.blit(name_text, (100, y_pos))
+
+            # Value
+            value_text = self.ws.font_normal.render(value, True, COLORS['white'])
+            self.ws.screen.blit(value_text, (320, y_pos))
+
+            # Change
+            change_color = COLORS['green'] if '+' in change else COLORS['red']
+            change_text = self.ws.font_normal.render(change, True, change_color)
+            self.ws.screen.blit(change_text, (480, y_pos))
+
+            y_pos += 40
+
+        # Note about real-time data
+        note_y = 380
+        note1 = self.ws.font_small.render("Note: Live data requires API key", True, COLORS['white'])
+        note1_rect = note1.get_rect(center=(320, note_y))
+        self.ws.screen.blit(note1, note1_rect)
+
+        note2 = self.ws.font_small.render("Visit alphavantage.co for free access", True, COLORS['white'])
+        note2_rect = note2.get_rect(center=(320, note_y + 20))
+        self.ws.screen.blit(note2, note2_rect)
+
+        self.logger.main_logger.debug("Drew Stock Market display")
 
     def draw_scrolling_text(self):
         """Draw bottom scrolling text"""
