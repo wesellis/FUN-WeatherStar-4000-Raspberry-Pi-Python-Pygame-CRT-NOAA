@@ -8,6 +8,7 @@ Pillow==11.0.0      # Image processing for radar (latest security update)
 
 # Optional but recommended
 ephem>=4.1.0        # Accurate astronomy calculations (sun/moon data)
+pyttsx3>=2.90       # Voice narration (optional - gracefully disabled if not installed)
 
 # Security note: All packages updated to latest secure versions
 # For Raspberry Pi users, you can also install via apt:

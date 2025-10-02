@@ -32,6 +32,7 @@ from weatherstar_modules.themes import get_theme, list_themes, CLASSIC_THEME
 from weatherstar_modules.history_graphs import get_history_graph
 from weatherstar_modules.emergency_animations import SevereWeatherDisplay
 from weatherstar_modules.performance import get_performance_optimizer
+from weatherstar_modules.voice_narration import get_narrator
 from weatherstar_modules import display_history
 
 # Initialize logging
@@ -389,7 +390,8 @@ class WeatherStar4000Complete:
             'show_msn': True,  # Auto-enabled by default
             'show_reddit': True,  # Auto-enabled by default
             'use_international': False,  # Use Open Meteo API for international weather
-            'theme': 'classic'  # Color theme
+            'theme': 'classic',  # Color theme
+            'voice_narration': False  # Voice announcements (OFF by default for authenticity)
         }
 
         # Load current theme
@@ -403,6 +405,14 @@ class WeatherStar4000Complete:
 
         # Initialize severe weather display
         self.severe_weather_display = SevereWeatherDisplay(SCREEN_WIDTH, SCREEN_HEIGHT)
+
+        # Initialize voice narrator
+        self.narrator = get_narrator()
+        self.original_music_volume = 0.3  # Store original volume for ducking
+        self.narrator.set_audio_callbacks(
+            duck_callback=self._duck_music_volume,
+            restore_callback=self._restore_music_volume
+        )
 
         # Weather trends storage for arrow indicators
         self.weather_trends = {
@@ -1067,6 +1077,7 @@ class WeatherStar4000Complete:
             ("---", None, None),  # Separator
             ("Audio Settings", "category", None),
             ("[4] Music Volume", "volume", self.settings.get('music_volume', 0.3)),
+            ("[0] Voice Narration", "voice_narration", self.settings.get('voice_narration', False)),
             ("---", None, None),  # Separator
             ("Weather Source", "category", None),
             ("[8] International Weather", "use_international", self.settings.get('use_international', False)),
@@ -1101,7 +1112,7 @@ class WeatherStar4000Complete:
                 # Regular menu item with checkbox style
                 item_x = 20
                 # Draw checkbox for toggleable items
-                if setting in ["show_marine", "show_trends", "show_historical", "show_msn", "show_reddit", "show_local_news", "use_international"]:
+                if setting in ["show_marine", "show_trends", "show_historical", "show_msn", "show_reddit", "show_local_news", "use_international", "voice_narration"]:
                     # Draw checkbox
                     checkbox = pygame.Rect(item_x, y_pos, 11, 11)
                     pygame.draw.rect(menu_surface, WIN95_LIGHT, checkbox)
@@ -1208,6 +1219,17 @@ class WeatherStar4000Complete:
                         logger.main_logger.info(f"Color theme: {self.current_theme.name}")
                         self.show_context_menu()  # Redraw menu
                         return
+                    elif event.key == pygame.K_0:
+                        # Toggle voice narration
+                        self.settings['voice_narration'] = not self.settings.get('voice_narration', False)
+                        self.narrator.set_enabled(self.settings['voice_narration'])
+                        status = "enabled" if self.settings['voice_narration'] else "disabled"
+                        logger.main_logger.info(f"Voice narration: {status}")
+                        if self.settings['voice_narration'] and self.narrator.is_available():
+                            # Test announcement
+                            self.narrator._speak_async("Voice narration enabled.")
+                        self.show_context_menu()  # Redraw menu
+                        return
                     elif event.key == pygame.K_r:
                         self.get_weather_data()
                         logger.main_logger.info("Weather data refreshed")
@@ -1225,6 +1247,26 @@ class WeatherStar4000Complete:
     def draw_severe_weather_alert(self, dt):
         """Draw animated severe weather alert"""
         display_history.draw_severe_weather_alert(self, dt)
+
+    def _duck_music_volume(self):
+        """Lower background music volume for voice narration (90s style)"""
+        try:
+            # Store current volume
+            self.original_music_volume = pygame.mixer.music.get_volume()
+            # Duck to 20% (low but still present - authentic to 90s weather broadcasts)
+            pygame.mixer.music.set_volume(0.20)
+            logger.main_logger.debug("Music ducked for voice narration")
+        except Exception as e:
+            logger.log_error("Error ducking music volume", e)
+
+    def _restore_music_volume(self):
+        """Restore background music volume after voice narration"""
+        try:
+            # Restore to original volume
+            pygame.mixer.music.set_volume(self.original_music_volume)
+            logger.main_logger.debug("Music volume restored")
+        except Exception as e:
+            logger.log_error("Error restoring music volume", e)
 
     def update_display_list(self):
         """Update display list based on settings"""
@@ -1269,6 +1311,11 @@ class WeatherStar4000Complete:
         new_mode = self.displays[self.current_display_index]
         self.display_timer = 0
         logger.log_display_change(old_mode.value, new_mode.value)
+
+        # Voice narration for new display (if enabled)
+        if self.settings.get('voice_narration', False):
+            self.narrator.set_enabled(True)
+            self.narrator.announce_display(new_mode.value, self.weather_data)
 
     def run(self):
         """Main application loop"""

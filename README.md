@@ -118,6 +118,7 @@ python run_weatherstar.py
 2. **Toggle Weather Trends** - Show/hide trend arrows
 3. **Toggle Historical Data** - Show/hide comparisons
 4. **Music Volume** - Adjust background music (0-100%)
+0. **Voice Narration** - Professional weather announcer (OFF by default, ducks music to 20%)
 5. **MSN Top Stories** - Toggle MSN news headlines
 6. **Reddit Headlines** - Toggle Reddit news
 7. **Local News** - Toggle local news display
@@ -236,7 +237,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - [x] Weather history graphs - ✅ **DONE** (30-day temperature & precipitation)
 - [x] Severe weather animations - ✅ **DONE** (flashing, scrolling, pulsating)
 - [x] Performance optimization for Pi - ✅ **DONE** (adaptive frame skipping, caching, memory mgmt)
-- [ ] Voice narration option (TTS for forecasts - low priority accessibility feature)
+- [x] Voice narration - ✅ **DONE** (professional announcer, audio ducking, OFF by default)
 
 ## 📺 Screenshots
 
@@ -258,26 +259,27 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## Project Status & Roadmap
 
-**Completion: ~96%**
+**Completion: ~98%**
 
 ### What Works
-- ✅ 23 Python files with modular architecture
+- ✅ 24 Python files with modular architecture
 - ✅ 22+ weather display modes (current conditions, forecasts, radar, almanac, **history graphs**)
 - ✅ NOAA/NWS API for US weather data
 - ✅ Open Meteo API for international weather
 - ✅ International weather toggle in settings menu
-- ✅ **NEW: 30-day weather history graphs** (temperature & precipitation trends)
-- ✅ **NEW: Animated severe weather alerts** (flashing borders, scrolling warnings)
-- ✅ **NEW: Performance optimizer** (frame skipping, caching, memory management for Pi)
+- ✅ **30-day weather history graphs** (temperature & precipitation trends)
+- ✅ **Animated severe weather alerts** (flashing borders, scrolling warnings, pulsating effects)
+- ✅ **Performance optimizer** (frame skipping, caching, memory management for Pi)
+- ✅ **NEW: Voice narration** (professional weather announcer, OFF by default, audio ducking)
 - ✅ News integration (MSN headlines, Reddit, local news)
 - ✅ Emergency alerts with NOAA integration
-- ✅ 75 smooth jazz background music tracks
+- ✅ 75 smooth jazz background music tracks (ducks to 20% during narration)
 - ✅ 41 weather condition icons with GIF animations
 - ✅ Authentic Star4000 fonts (4 TTF fonts)
 - ✅ 5 color themes (Classic, Dark, High Contrast, Retro Green, Amber)
 - ✅ Raspberry Pi optimizations (adaptive frame skipping, surface caching)
 - ✅ CRT TV support (640x480, 4:3 aspect ratio, composite output)
-- ✅ Settings menu with volume, toggles, themes, API selection
+- ✅ Settings menu with volume, narration, toggles, themes, API selection
 - ✅ **Comprehensive test suite** (37 unit + integration tests, 100% passing)
 - ✅ Automated CI/CD testing via GitHub Actions
 - ✅ GitHub Actions workflows (Pi image builder, Windows EXE, releases)
@@ -301,7 +303,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - ✅ **Custom Color Themes** - 5 themes available (classic, dark, high contrast, retro green, amber)
 - ✅ **Weather History Graphs** - 30-day temperature & precipitation trend visualization
 - ✅ **Severe Weather Animations** - Flashing alerts, scrolling warnings, pulsating backgrounds
-- ❌ **Voice Narration** - No TTS audio narration (accessibility feature - low priority)
+- ✅ **Voice Narration** - Professional weather announcer with audio ducking (OFF by default)
 
 **Performance:**
 - ✅ **Optimized for Pi** - Adaptive frame skipping, surface/font/image caching, memory management
@@ -336,7 +338,7 @@ This is a **production-ready, fully functional WeatherStar 4000 recreation** mar
 4. ~~**Weather History Graphs**~~ - ✅ **COMPLETED** (30-day temperature & precipitation trends)
 5. ~~**Severe Weather Animations**~~ - ✅ **COMPLETED** (Flashing, scrolling, pulsating effects)
 6. ~~**Performance Optimization**~~ - ✅ **COMPLETED** (Frame skipping, caching, memory management)
-7. **Voice Narration** - Optional TTS for accessibility (low priority, 4% remaining)
+7. ~~**Voice Narration**~~ - ✅ **COMPLETED** (Professional announcer, audio ducking, 90s authentic)
 
 ### Achievements
 
