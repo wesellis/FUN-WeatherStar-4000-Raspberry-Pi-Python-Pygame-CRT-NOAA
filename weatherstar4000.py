@@ -29,6 +29,10 @@ from weatherstar_modules.displays import WeatherStarDisplays
 from weatherstar_modules.news_displays import WeatherStarNewsDisplays
 from weatherstar_modules.data_fetchers import WeatherStarDataFetchers
 from weatherstar_modules.themes import get_theme, list_themes, CLASSIC_THEME
+from weatherstar_modules.history_graphs import get_history_graph
+from weatherstar_modules.emergency_animations import SevereWeatherDisplay
+from weatherstar_modules.performance import get_performance_optimizer
+from weatherstar_modules import display_history
 
 # Initialize logging
 logger = init_logger()
@@ -390,6 +394,15 @@ class WeatherStar4000Complete:
 
         # Load current theme
         self.current_theme = get_theme(self.settings['theme'])
+
+        # Initialize performance optimizer
+        self.perf_optimizer = get_performance_optimizer()
+
+        # Initialize history graphs
+        self.history_graph = get_history_graph()
+
+        # Initialize severe weather display
+        self.severe_weather_display = SevereWeatherDisplay(SCREEN_WIDTH, SCREEN_HEIGHT)
 
         # Weather trends storage for arrow indicators
         self.weather_trends = {
@@ -1205,6 +1218,14 @@ class WeatherStar4000Complete:
                     if not (menu_x <= mouse_x <= menu_x + menu_width and menu_y <= mouse_y <= menu_y + menu_height):
                         waiting = False
 
+    def draw_history_graphs(self):
+        """Draw 30-day weather history graphs"""
+        display_history.draw_history_graphs(self)
+
+    def draw_severe_weather_alert(self, dt):
+        """Draw animated severe weather alert"""
+        display_history.draw_severe_weather_alert(self, dt)
+
     def update_display_list(self):
         """Update display list based on settings"""
         # Authentic WeatherStar 4000 display sequence (90s style)
@@ -1216,6 +1237,7 @@ class WeatherStar4000Complete:
             DisplayMode.RADAR,                 # 5. Local Radar
             DisplayMode.TRAVEL_CITIES,         # 6. Travel Cities Weather
             DisplayMode.ALMANAC,               # 7. Almanac
+            DisplayMode.HISTORY_GRAPHS,        # 8. NEW: 30-day Trends
         ]
 
         # Add optional displays only if enabled (keep it simple by default)
@@ -1279,6 +1301,14 @@ class WeatherStar4000Complete:
             while running:
                 frame_count += 1
                 dt = self.clock.tick(30)  # 30 FPS
+
+                # Update performance optimizer
+                self.perf_optimizer.update(target_fps=30)
+
+                # Skip frame if performance is poor (Pi optimization)
+                if self.perf_optimizer.should_skip_frame():
+                    continue
+
                 self.display_timer += dt
 
                 # Handle events
@@ -1410,6 +1440,12 @@ class WeatherStar4000Complete:
                     elif current_mode == DisplayMode.RADAR:
                         if self.displays_module:
                             self.displays_module.draw_radar()
+                    elif current_mode == DisplayMode.HISTORY_GRAPHS:
+                        # NEW: Draw 30-day weather history graphs
+                        self.draw_history_graphs()
+                    elif current_mode == DisplayMode.SEVERE_WEATHER_ALERT:
+                        # NEW: Animated severe weather alert
+                        self.draw_severe_weather_alert(dt / 1000.0)
                     else:
                         # Fallback
                         self.draw_background('1')
