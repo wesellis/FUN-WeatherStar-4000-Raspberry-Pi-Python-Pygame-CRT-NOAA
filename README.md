@@ -245,10 +245,8 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - [x] Automated test suite - ✅ **DONE** (21 tests, 100% passing)
 - [ ] Weather history graphs (30-day temperature/precipitation trends)
 - [ ] Severe weather animations (flashing alerts, scrolling warnings)
-- [ ] Voice narration option (TTS for forecasts)
-- [ ] Web interface for remote viewing
-- [ ] Mobile companion app
-- [ ] Performance optimization for Pi Zero 2W (<150MB RAM)
+- [ ] Performance optimization for Pi Zero 2W (<150MB RAM, 30+ FPS)
+- [ ] Voice narration option (TTS for forecasts - accessibility feature)
 
 ## 📺 Screenshots
 
@@ -308,11 +306,9 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - ⚠️ **Local News** - Requires API key for real news, simulated by default
 - ✅ **International Toggle** - Easy UI switch between NOAA and Open Meteo
 - ✅ **Custom Color Themes** - 5 themes available (classic, dark, high contrast, retro green, amber)
-- ❌ **Voice Narration** - No audio narration of forecasts
-- ❌ **Web Interface** - No remote viewing capability
-- ❌ **Mobile Companion App** - Desktop/Pi only
 - ❌ **Weather History Graphs** - No historical trend visualization (30-day trends)
-- ❌ **Severe Weather Animations** - Static emergency alerts only
+- ❌ **Severe Weather Animations** - Static emergency alerts (no flashing/scrolling)
+- ❌ **Voice Narration** - No TTS audio narration (accessibility feature)
 
 **Performance:**
 - ⚠️ **Pi Zero 2W** - 20-30 FPS (acceptable but lower than Pi 4's 45-60 FPS)
@@ -327,7 +323,7 @@ This is a **production-ready, fully functional WeatherStar 4000 recreation** mar
 - Clean, modular codebase
 - Comprehensive documentation
 
-**Reality Check**: This is one of the most complete personal projects - it actually works as advertised. All core features implemented. Missing features are polish/enhancement items, not core functionality.
+**Reality Check**: This is one of the most complete personal projects - it actually works as advertised. All core features implemented. Missing features are polish items specific to the CRT/Raspberry Pi experience, not core functionality.
 
 ### Performance Metrics
 
@@ -338,15 +334,15 @@ This is a **production-ready, fully functional WeatherStar 4000 recreation** mar
 | Pi 3B+ | 30-45 | 200MB | 30-40% |
 | Pi Zero 2 | 20-30 | 180MB | 50-60% |
 
-### What Needs Work
+### What Needs Work to Hit 100%
 
 1. ~~**Testing Infrastructure**~~ - ✅ **COMPLETED** (21 unit + integration tests)
 2. ~~**CI/CD Enhancement**~~ - ✅ **COMPLETED** (GitHub Actions automated testing)
 3. ~~**Roadmap Features**~~ - ✅ **COMPLETED** (International toggle + 5 color themes)
-4. **Weather History Graphs** - 30-day temperature and precipitation trends
-5. **Severe Weather Animations** - Animated emergency alerts
-6. **Web Interface** - Remote viewing capability for modern displays (optional)
-7. **Performance** - Further optimize for Pi Zero 2W (<150MB RAM target)
+4. **Weather History Graphs** - 30-day temperature and precipitation trend visualization
+5. **Severe Weather Animations** - Flashing alerts and scrolling warnings (authentic to original)
+6. **Performance Optimization** - Optimize for Pi Zero 2W (<150MB RAM, 30+ FPS target)
+7. **Voice Narration** - Optional TTS for accessibility (low priority)
 
 ### Achievements
 
