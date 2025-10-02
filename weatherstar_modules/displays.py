@@ -2324,12 +2324,10 @@ class WeatherStarDisplays:
         self.logger.main_logger.debug("Drew Recent Earthquakes display")
 
     def draw_stock_market(self):
-        """Draw Stock Market Indices - Simple ticker display"""
+        """Draw Stock Market Indices - Live data from Alpha Vantage"""
         self.ws.draw_background('5')  # Latest Observations background
         self.ws.draw_header("Stock Market", "Update")
 
-        # Note: This would require an API key for real data
-        # For now, show placeholder with instructions
         y_pos = 150
 
         title = self.ws.font_extended.render("MARKET INDICES", True, COLORS['yellow'])
@@ -2337,12 +2335,8 @@ class WeatherStarDisplays:
         self.ws.screen.blit(title, title_rect)
         y_pos += 50
 
-        # Placeholder indices
-        indices = [
-            ("DOW JONES", "44,910.65", "+125.50", "green"),
-            ("S&P 500", "6,012.28", "+22.18", "green"),
-            ("NASDAQ", "19,218.17", "+85.28", "green")
-        ]
+        # Fetch live stock data
+        indices = self._fetch_stock_data()
 
         for name, value, change, color in indices:
             # Index name
@@ -2360,17 +2354,78 @@ class WeatherStarDisplays:
 
             y_pos += 40
 
-        # Note about real-time data
-        note_y = 380
-        note1 = self.ws.font_small.render("Note: Live data requires API key", True, COLORS['white'])
-        note1_rect = note1.get_rect(center=(320, note_y))
-        self.ws.screen.blit(note1, note1_rect)
-
-        note2 = self.ws.font_small.render("Visit alphavantage.co for free access", True, COLORS['white'])
-        note2_rect = note2.get_rect(center=(320, note_y + 20))
-        self.ws.screen.blit(note2, note2_rect)
-
         self.logger.main_logger.debug("Drew Stock Market display")
+
+    def _fetch_stock_data(self):
+        """Fetch live stock data from Alpha Vantage API with caching"""
+        import time
+        import requests
+
+        # Cache for 5 minutes to avoid API rate limits
+        cache_duration = 300
+        current_time = time.time()
+
+        if not hasattr(self, '_stock_cache'):
+            self._stock_cache = {'time': 0, 'data': None}
+
+        # Return cached data if still valid
+        if current_time - self._stock_cache['time'] < cache_duration and self._stock_cache['data']:
+            return self._stock_cache['data']
+
+        # Alpha Vantage API key
+        api_key = "KBJUBCRVPKUKBOLN"
+
+        # ETF symbols that track the major indices
+        symbols = {
+            "DIA": "DOW JONES",
+            "SPY": "S&P 500",
+            "QQQ": "NASDAQ"
+        }
+
+        indices = []
+
+        for symbol, name in symbols.items():
+            try:
+                url = f"https://www.alphavantage.co/query"
+                params = {
+                    'function': 'GLOBAL_QUOTE',
+                    'symbol': symbol,
+                    'apikey': api_key
+                }
+
+                response = requests.get(url, params=params, timeout=5)
+
+                if response.status_code == 200:
+                    data = response.json()
+                    quote = data.get('Global Quote', {})
+
+                    if quote:
+                        price = float(quote.get('05. price', 0))
+                        change = float(quote.get('09. change', 0))
+
+                        # Format display
+                        price_str = f"{price:,.2f}"
+                        change_str = f"{'+' if change >= 0 else ''}{change:,.2f}"
+
+                        indices.append((name, price_str, change_str, "green" if change >= 0 else "red"))
+                    else:
+                        # Fallback if no data
+                        indices.append((name, "N/A", "N/A", "green"))
+                else:
+                    indices.append((name, "N/A", "N/A", "green"))
+
+                # Small delay to avoid rate limiting
+                time.sleep(0.2)
+
+            except Exception as e:
+                self.logger.main_logger.error(f"Error fetching {symbol}: {e}")
+                indices.append((name, "N/A", "N/A", "green"))
+
+        # Cache the results
+        self._stock_cache['time'] = current_time
+        self._stock_cache['data'] = indices
+
+        return indices
 
     def draw_scrolling_text(self):
         """Draw bottom scrolling text"""
