@@ -2010,9 +2010,9 @@ class WeatherStarDisplays:
         self.logger.main_logger.debug("Drew Monthly Outlook display")
 
     def draw_temperature_history(self):
-        """Draw 30-Day Temperature History - 90s style scrolling text"""
+        """Draw 30-Day Temperature - 90s style scrolling text"""
         self.ws.draw_background('5')  # Latest Observations background
-        self.ws.draw_header("30-Day", "Temperature History")
+        self.ws.draw_header("30-Day", "Temperature")
 
         # Get history data
         from weatherstar_modules.history_graphs import get_weather_history
@@ -2081,9 +2081,9 @@ class WeatherStarDisplays:
         self.logger.main_logger.debug("Drew Temperature History display")
 
     def draw_precipitation_history(self):
-        """Draw 30-Day Precipitation History - 90s style scrolling text"""
+        """Draw 30-Day Precipitation - 90s style scrolling text"""
         self.ws.draw_background('5')  # Latest Observations background
-        self.ws.draw_header("30-Day", "Precipitation History")
+        self.ws.draw_header("30-Day", "Precipitation")
 
         # Get history data
         from weatherstar_modules.history_graphs import get_weather_history
@@ -2353,8 +2353,8 @@ class WeatherStarDisplays:
             value_text = self.ws.font_normal.render(value, True, COLORS['white'])
             self.ws.screen.blit(value_text, (320, y_pos))
 
-            # Change
-            change_color = COLORS['green'] if '+' in change else COLORS['red']
+            # Change (use RGB values directly)
+            change_color = (0, 255, 0) if '+' in change else (255, 0, 0)  # Green or Red
             change_text = self.ws.font_normal.render(change, True, change_color)
             self.ws.screen.blit(change_text, (480, y_pos))
 
