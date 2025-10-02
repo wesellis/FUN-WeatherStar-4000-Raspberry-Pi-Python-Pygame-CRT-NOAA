@@ -3,7 +3,7 @@
 
 # Core Requirements
 pygame==2.6.1       # Display rendering, audio playback (latest stable - Sep 2024)
-requests==2.32.3    # API calls to weather services (security update)
+requests==2.32.4    # API calls to weather services (security update)
 Pillow==11.0.0      # Image processing for radar (latest security update)
 
 # Optional but recommended
