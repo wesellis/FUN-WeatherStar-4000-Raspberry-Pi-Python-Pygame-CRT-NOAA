@@ -1,24 +1,14 @@
-# 📺 WeatherStar 4000 Python Recreation
+# WeatherStar 4000 Python Recreation
 
-<div align="center">
+A pixel-perfect recreation of the iconic WeatherStar 4000 for Raspberry Pi and CRT TVs.
 
-![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
-![Pygame](https://img.shields.io/badge/Pygame-00AA00?style=for-the-badge&logo=python&logoColor=white)
-![Raspberry Pi](https://img.shields.io/badge/Raspberry%20Pi-A22846?style=for-the-badge&logo=Raspberry%20Pi&logoColor=white)
-![NOAA](https://img.shields.io/badge/NOAA%20API-003087?style=for-the-badge&logo=gov&logoColor=white)
-![CRT](https://img.shields.io/badge/CRT%20TV-Ready-orange?style=for-the-badge)
-
-### **Authentic 1990s Weather Channel Experience**
-*A pixel-perfect recreation of the iconic WeatherStar 4000 for Raspberry Pi and CRT TVs*
-
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Python Version](https://img.shields.io/badge/Python-3.7+-blue.svg)](https://www.python.org/)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
-[![CRT Compatible](https://img.shields.io/badge/4:3%20CRT-Compatible-green.svg)](https://en.wikipedia.org/wiki/Cathode-ray_tube)
-
-[Features](#-features) • [Quick Start](#-quick-start) • [Raspberry Pi](#-raspberry-pi--crt-tv-setup) • [Screenshots](#-screenshots) • [Documentation](#-documentation)
-
-</div>
+[![Python](https://img.shields.io/badge/Python-3.7+-3776AB?style=flat-square&logo=python&logoColor=white)](https://python.org)
+[![Pygame](https://img.shields.io/badge/Pygame-00AA00?style=flat-square&logo=python&logoColor=white)](#)
+[![Raspberry Pi](https://img.shields.io/badge/Raspberry_Pi-A22846?style=flat-square&logo=raspberry-pi&logoColor=white)](#)
+[![NOAA](https://img.shields.io/badge/NOAA_API-003087?style=flat-square)](#)
+[![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
+[![Stars](https://img.shields.io/github/stars/wesellis/FUN-WeatherStar-4000-Raspberry-Pi-Python-Pygame-CRT-NOAA?style=flat-square)](https://github.com/wesellis/FUN-WeatherStar-4000-Raspberry-Pi-Python-Pygame-CRT-NOAA/stargazers)
+[![Last Commit](https://img.shields.io/github/last-commit/wesellis/FUN-WeatherStar-4000-Raspberry-Pi-Python-Pygame-CRT-NOAA?style=flat-square)](https://github.com/wesellis/FUN-WeatherStar-4000-Raspberry-Pi-Python-Pygame-CRT-NOAA/commits)
 
 ---
 
