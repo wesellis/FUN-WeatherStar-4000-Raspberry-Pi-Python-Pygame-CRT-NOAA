@@ -1016,6 +1016,13 @@ class WeatherStar4000Complete:
         time_rect = time_text.get_rect(right=585, y=44)
         self.screen.blit(time_text, time_rect)
 
+        # Date below the time (authentic WeatherStar 4000 style)
+        date_str = datetime.now().strftime("%a %b %d").upper()  # "WED OCT 02"
+        date_text = self.font_small.render(date_str, True, COLORS['white'])
+        # Right-align below the time
+        date_rect = date_text.get_rect(right=585, y=64)
+        self.screen.blit(date_text, date_rect)
+
     def show_context_menu(self):
         """Show Windows 95-style menu on right-click"""
         # Classic Windows 95 colors
