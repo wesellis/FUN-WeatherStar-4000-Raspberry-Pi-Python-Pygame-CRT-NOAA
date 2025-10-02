@@ -1995,6 +1995,162 @@ class WeatherStarDisplays:
 
         self.logger.main_logger.debug("Drew Monthly Outlook display")
 
+    def draw_temperature_history(self):
+        """Draw 30-Day Temperature History - 90s style scrolling text"""
+        self.ws.draw_background('5')  # Latest Observations background
+        self.ws.draw_header("30-Day", "Temperature History")
+
+        # Get history data
+        from weatherstar_modules.history_graphs import get_weather_history
+        history = get_weather_history()
+
+        if not history.history_data['temperature']:
+            # Try to fetch data
+            history.fetch_history_data(self.ws.lat, self.ws.lon)
+
+        # Column headers
+        y_pos = 120
+        header_col1 = self.ws.font_normal.render("DATE", True, COLORS['yellow'])
+        header_col2 = self.ws.font_normal.render("HIGH", True, COLORS['yellow'])
+        header_col3 = self.ws.font_normal.render("LOW", True, COLORS['yellow'])
+
+        self.ws.screen.blit(header_col1, (60, y_pos))
+        self.ws.screen.blit(header_col2, (320, y_pos))
+        self.ws.screen.blit(header_col3, (480, y_pos))
+
+        y_pos += 40
+
+        # Draw horizontal line under headers
+        pygame.draw.line(self.ws.screen, COLORS['yellow'], (50, y_pos - 5), (590, y_pos - 5), 1)
+
+        # Display data (scrolling if more than 8 rows)
+        max_rows = 8
+        start_index = int(history.scroll_offset_temp / 30) if hasattr(history, 'scroll_offset_temp') else 0
+
+        row_count = 0
+        for i, (date_str, high, low) in enumerate(history.history_data['temperature']):
+            if i < start_index:
+                continue
+            if row_count >= max_rows:
+                break
+
+            try:
+                # Format date
+                date_obj = datetime.strptime(date_str, "%Y-%m-%d")
+                date_display = date_obj.strftime("%a %m/%d")
+
+                # Display row
+                date_text = self.ws.font_normal.render(date_display, True, COLORS['white'])
+                high_text = self.ws.font_normal.render(f"{int(high)}\u00b0", True, COLORS['white'])
+                low_text = self.ws.font_normal.render(f"{int(low)}\u00b0", True, COLORS['white'])
+
+                self.ws.screen.blit(date_text, (60, y_pos))
+                self.ws.screen.blit(high_text, (330, y_pos))
+                self.ws.screen.blit(low_text, (490, y_pos))
+
+                y_pos += 30
+                row_count += 1
+
+            except Exception as e:
+                self.logger.main_logger.error(f"Error formatting temperature history row: {e}")
+                continue
+
+        # Update scroll for next frame
+        if len(history.history_data['temperature']) > max_rows:
+            history.update_scroll(time.time())
+            # Reset scroll when reaching end
+            max_scroll = (len(history.history_data['temperature']) - max_rows) * 30
+            if history.scroll_offset_temp > max_scroll:
+                history.scroll_offset_temp = 0
+                history.last_scroll_time = time.time()
+
+        self.logger.main_logger.debug("Drew Temperature History display")
+
+    def draw_precipitation_history(self):
+        """Draw 30-Day Precipitation History - 90s style scrolling text"""
+        self.ws.draw_background('5')  # Latest Observations background
+        self.ws.draw_header("30-Day", "Precipitation History")
+
+        # Get history data
+        from weatherstar_modules.history_graphs import get_weather_history
+        history = get_weather_history()
+
+        if not history.history_data['precipitation']:
+            # Try to fetch data
+            history.fetch_history_data(self.ws.lat, self.ws.lon)
+
+        # Column headers
+        y_pos = 120
+        header_col1 = self.ws.font_normal.render("DATE", True, COLORS['yellow'])
+        header_col2 = self.ws.font_normal.render("AMOUNT", True, COLORS['yellow'])
+        header_col3 = self.ws.font_normal.render("STATUS", True, COLORS['yellow'])
+
+        self.ws.screen.blit(header_col1, (60, y_pos))
+        self.ws.screen.blit(header_col2, (300, y_pos))
+        self.ws.screen.blit(header_col3, (480, y_pos))
+
+        y_pos += 40
+
+        # Draw horizontal line under headers
+        pygame.draw.line(self.ws.screen, COLORS['yellow'], (50, y_pos - 5), (590, y_pos - 5), 1)
+
+        # Display data (scrolling if more than 8 rows)
+        max_rows = 8
+        start_index = int(history.scroll_offset_precip / 30) if hasattr(history, 'scroll_offset_precip') else 0
+
+        row_count = 0
+        for i, (date_str, precip) in enumerate(history.history_data['precipitation']):
+            if i < start_index:
+                continue
+            if row_count >= max_rows:
+                break
+
+            try:
+                # Format date
+                date_obj = datetime.strptime(date_str, "%Y-%m-%d")
+                date_display = date_obj.strftime("%a %m/%d")
+
+                # Format precipitation amount
+                if precip == 0:
+                    amount_display = "Trace"
+                    status = "Dry"
+                elif precip < 0.1:
+                    amount_display = f"{precip:.2f}\""
+                    status = "Light"
+                elif precip < 0.5:
+                    amount_display = f"{precip:.2f}\""
+                    status = "Moderate"
+                else:
+                    amount_display = f"{precip:.2f}\""
+                    status = "Heavy"
+
+                # Display row
+                date_text = self.ws.font_normal.render(date_display, True, COLORS['white'])
+                amount_text = self.ws.font_normal.render(amount_display, True, COLORS['white'])
+                status_text = self.ws.font_normal.render(status, True, COLORS['white'])
+
+                self.ws.screen.blit(date_text, (60, y_pos))
+                self.ws.screen.blit(amount_text, (310, y_pos))
+                self.ws.screen.blit(status_text, (490, y_pos))
+
+                y_pos += 30
+                row_count += 1
+
+            except Exception as e:
+                self.logger.main_logger.error(f"Error formatting precipitation history row: {e}")
+                continue
+
+        # Update scroll for next frame
+        if len(history.history_data['precipitation']) > max_rows:
+            history.update_scroll(time.time())
+            # Reset scroll when reaching end
+            max_scroll = (len(history.history_data['precipitation']) - max_rows) * 30
+            if history.scroll_offset_precip > max_scroll:
+                history.scroll_offset_precip = 0
+                history.last_scroll_time = time.time()
+
+        self.logger.main_logger.debug("Drew Precipitation History display")
+
     def draw_scrolling_text(self):
         """Draw bottom scrolling text"""
         try:

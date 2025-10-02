@@ -56,5 +56,6 @@ class DisplayMode(Enum):
     MSN_NEWS = "msn-news"
     REDDIT_NEWS = "reddit-news"
     LOCAL_NEWS = "local-news"
-    HISTORY_GRAPHS = "history-graphs"  # NEW: 30-day trends
-    SEVERE_WEATHER_ALERT = "severe-weather-alert"  # NEW: Animated alerts
+    TEMPERATURE_HISTORY = "temperature-history"  # 30-day temperature history
+    PRECIPITATION_HISTORY = "precipitation-history"  # 30-day precipitation history
+    SEVERE_WEATHER_ALERT = "severe-weather-alert"  # Animated weather alerts

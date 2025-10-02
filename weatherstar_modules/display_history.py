@@ -1,35 +1,10 @@
 #!/usr/bin/env python3
 """
-History Graph Display Methods
-Extends WeatherStar displays with history graph rendering
+Severe Weather Alert Display Methods
+Extends WeatherStar displays with animated alert rendering
 """
 
 import pygame
-
-
-def draw_history_graphs(ws_instance):
-    """Draw 30-day temperature and precipitation history graphs"""
-    # Fetch history data if needed
-    if not ws_instance.history_graph.history_data['temperature']:
-        ws_instance.history_graph.fetch_history_data(ws_instance.lat, ws_instance.lon)
-
-    # Draw background
-    ws_instance.screen.fill(ws_instance.current_theme.get_color('blue_gradient_2'))
-
-    # Split screen: temperature graph on top, precipitation on bottom
-    screen_rect = ws_instance.screen.get_rect()
-
-    temp_rect = pygame.Rect(0, 0, screen_rect.width, screen_rect.height // 2)
-    precip_rect = pygame.Rect(0, screen_rect.height // 2, screen_rect.width, screen_rect.height // 2)
-
-    # Draw graphs
-    ws_instance.history_graph.draw_temperature_graph(
-        ws_instance.screen, temp_rect, ws_instance.current_theme.colors
-    )
-
-    ws_instance.history_graph.draw_precipitation_graph(
-        ws_instance.screen, precip_rect, ws_instance.current_theme.colors
-    )
 
 
 def draw_severe_weather_alert(ws_instance, dt):
