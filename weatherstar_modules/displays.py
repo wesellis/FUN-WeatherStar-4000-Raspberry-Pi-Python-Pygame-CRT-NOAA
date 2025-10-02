@@ -84,12 +84,19 @@ class WeatherStarDisplays:
         if has_noaa and 'noaa' in self.ws.logos:
             self.ws.screen.blit(self.ws.logos['noaa'], (356, 39))
 
-        # Time at exact position: left: 415px, right-aligned within 170px width
+        # Time at updated position: moved up 10px and right 5px
         time_str = datetime.now().strftime("%I:%M %p").lstrip('0')
         time_text = self.ws.font_small.render(time_str, True, COLORS['white'])
-        # Right-align within the box from 415 to 585 (415 + 170)
-        time_rect = time_text.get_rect(right=585, y=44)
+        # Right-align at 590 (was 585+5), y=34 (was 44-10)
+        time_rect = time_text.get_rect(right=590, y=34)
         self.ws.screen.blit(time_text, time_rect)
+
+        # Date below the time (authentic WeatherStar 4000 style)
+        date_str = datetime.now().strftime("%a %b %d").upper()  # "WED OCT 02"
+        date_text = self.ws.font_small.render(date_str, True, COLORS['white'])
+        # Right-align below the time at 590, y=54 (was 64-10)
+        date_rect = date_text.get_rect(right=590, y=54)
+        self.ws.screen.blit(date_text, date_rect)
 
     def draw_msn_news(self):
         """Display MSN news headlines with scrolling"""
@@ -450,14 +457,7 @@ class WeatherStarDisplays:
         if location_str:
             location_text = self.ws.font_normal.render(location_str, True, COLORS['yellow'])
             self.ws.screen.blit(location_text, (right_col_x, y_pos))
-            y_pos += 30  # Spacing before date
-
-        # Date below location
-        from datetime import datetime
-        date_str = datetime.now().strftime("%a %b %d").upper()  # "WED OCT 02"
-        date_text = self.ws.font_small.render(date_str, True, COLORS['white'])
-        self.ws.screen.blit(date_text, (right_col_x, y_pos))
-        y_pos += 30  # Spacing before data rows
+            y_pos += 30  # Spacing before data rows
 
         # Data rows with labels and values
         row_data = []
@@ -648,13 +648,6 @@ class WeatherStarDisplays:
         """Draw Extended Forecast screen with proper ws4kp column layout"""
         self.draw_background('3')
         self.draw_header("Extended", "Forecast")
-
-        # Date at top center
-        from datetime import datetime
-        date_str = datetime.now().strftime("%A, %B %d, %Y")  # "Wednesday, October 02, 2025"
-        date_text = self.ws.font_small.render(date_str, True, COLORS['white'])
-        date_rect = date_text.get_rect(center=(320, 90))
-        self.ws.screen.blit(date_text, date_rect)
 
         forecast = self.ws.weather_data.get('forecast', {})
         periods = forecast.get('periods', [])
