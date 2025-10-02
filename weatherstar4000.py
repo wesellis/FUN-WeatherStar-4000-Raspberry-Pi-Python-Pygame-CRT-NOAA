@@ -86,6 +86,8 @@ class DisplayMode(Enum):
     MSN_NEWS = "msn-news"
     REDDIT_NEWS = "reddit-news"
     LOCAL_NEWS = "local-news"
+    HISTORY_GRAPHS = "history-graphs"
+    SEVERE_WEATHER_ALERT = "severe-weather-alert"
 
 # Colors from ws4kp SCSS
 COLORS = {
